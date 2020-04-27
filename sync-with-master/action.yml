@@ -1,0 +1,9 @@
+name: 'sync with master'
+inputs:
+  branch-to-sync:
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.branch-to-sync }}
