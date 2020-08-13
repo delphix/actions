@@ -35,7 +35,13 @@ git branch --set-upstream-to "origin/${DOWNSTREAM_BRANCH}"
 git reset --hard "origin/${DOWNSTREAM_BRANCH}"
 
 git merge "upstream/${UPSTREAM_BRANCH}"
-git push -f origin "HEAD:projects/sync-with-upstream/${DOWNSTREAM_BRANCH}"
+
+#
+# In order for the "hub" command to properly detect which remote branch
+# is the "tracking" branch, we must use "-u" here such that the local
+# branch tracks the remote branch we're pushing to.
+#
+git push -f -u origin "HEAD:projects/sync-with-upstream/${DOWNSTREAM_BRANCH}"
 
 #
 # We remove this remote that we added before so the "hub" command can
@@ -43,6 +49,14 @@ git push -f origin "HEAD:projects/sync-with-upstream/${DOWNSTREAM_BRANCH}"
 # so it'll open the pull request against the "origin" repository.
 #
 git remote remove upstream
+
+#
+# In order for the "hub" command to work properly when generating the
+# pull request, we need to set this git configuration. This way, "hub"
+# will not incorrectly assume any remote branch named the same as the
+# local branch, is the tracking branch.
+#
+git config push.default upstream
 
 #
 # Opening a pull request may fail if there already exists a pull request
