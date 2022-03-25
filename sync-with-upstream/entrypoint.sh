@@ -12,23 +12,6 @@ DOWNSTREAM_BRANCH="$3"
 [[ -n "${DOWNSTREAM_BRANCH}" ]] || exit 1
 
 #
-# If there is a PR already then this is a no-op.
-#
-# An alternative design would be to pile up more commits
-# from the upstream repo if there exist any into the
-# existing PR instead of exiting here. (e.g. we could
-# check the hash of the upstream HEAD and see if that
-# hash is part of the existing PR, and if it's not we'd
-# force push into the PR). We decided not to go with
-# that design due to the simplicity of the current one.
-#
-SYNC_PR=$(hub pr list -s open -h "projects/sync-with-upstream/${DOWNSTREAM_BRANCH}")
-if [[ -n "${SYNC_PR}" ]]; then
-	echo "sync-with-upstream PR already exists: ${SYNC_PR}"
-	exit 0
-fi
-
-#
 # We need these config parameters set in order to do the git-merge.
 #
 git config user.name "${GITHUB_ACTOR}"
