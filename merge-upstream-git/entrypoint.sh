@@ -3,11 +3,11 @@
 #
 # This variable must be passed into this script.
 #
-UPSTREAM_REPOSITORY="$1"
+UPSTREAM_URL="$1"
 UPSTREAM_BRANCH="$2"
 DOWNSTREAM_BRANCH="$3"
 
-[[ -n "${UPSTREAM_REPOSITORY}" ]] || exit 1
+[[ -n "${UPSTREAM_URL}" ]] || exit 1
 [[ -n "${UPSTREAM_BRANCH}" ]] || exit 1
 [[ -n "${DOWNSTREAM_BRANCH}" ]] || exit 1
 
@@ -39,7 +39,7 @@ git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 #
 git fetch --unshallow
 
-git remote add upstream "$UPSTREAM_REPOSITORY"
+git remote add upstream "$UPSTREAM_URL"
 git fetch upstream
 
 if git show-ref --verify --quiet "refs/heads/${DOWNSTREAM_BRANCH}"; then

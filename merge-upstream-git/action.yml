@@ -1,6 +1,6 @@
-name: 'sync with upstream'
+name: 'merge upstream git'
 inputs:
-  upstream-repository:
+  upstream-url:
     required: true
   upstream-branch:
     required: true
@@ -10,6 +10,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.upstream-repository }}
+    - ${{ inputs.upstream-url }}
     - ${{ inputs.upstream-branch }}
     - ${{ inputs.downstream-branch }}
