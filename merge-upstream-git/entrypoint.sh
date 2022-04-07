@@ -3,30 +3,13 @@
 #
 # This variable must be passed into this script.
 #
-UPSTREAM_REPOSITORY="$1"
+UPSTREAM_URL="$1"
 UPSTREAM_BRANCH="$2"
 DOWNSTREAM_BRANCH="$3"
 
-[[ -n "${UPSTREAM_REPOSITORY}" ]] || exit 1
+[[ -n "${UPSTREAM_URL}" ]] || exit 1
 [[ -n "${UPSTREAM_BRANCH}" ]] || exit 1
 [[ -n "${DOWNSTREAM_BRANCH}" ]] || exit 1
-
-#
-# If there is a PR already then this is a no-op.
-#
-# An alternative design would be to pile up more commits
-# from the upstream repo if there exist any into the
-# existing PR instead of exiting here. (e.g. we could
-# check the hash of the upstream HEAD and see if that
-# hash is part of the existing PR, and if it's not we'd
-# force push into the PR). We decided not to go with
-# that design due to the simplicity of the current one.
-#
-SYNC_PR=$(hub pr list -s open -h "projects/sync-with-upstream/${DOWNSTREAM_BRANCH}")
-if [[ -n "${SYNC_PR}" ]]; then
-	echo "sync-with-upstream PR already exists: ${SYNC_PR}"
-	exit 0
-fi
 
 #
 # We need these config parameters set in order to do the git-merge.
@@ -39,7 +22,7 @@ git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 #
 git fetch --unshallow
 
-git remote add upstream "$UPSTREAM_REPOSITORY"
+git remote add upstream "$UPSTREAM_URL"
 git fetch upstream
 
 if git show-ref --verify --quiet "refs/heads/${DOWNSTREAM_BRANCH}"; then
@@ -58,7 +41,7 @@ git merge "upstream/${UPSTREAM_BRANCH}"
 # is the "tracking" branch, we must use "-u" here such that the local
 # branch tracks the remote branch we're pushing to.
 #
-git push -f -u origin "HEAD:projects/sync-with-upstream/${DOWNSTREAM_BRANCH}"
+git push -f -u origin "HEAD:actions/merge-upstream/${DOWNSTREAM_BRANCH}"
 
 #
 # We remove this remote that we added before so the "hub" command can
@@ -89,4 +72,13 @@ git config push.default upstream
 git log -1 --format=%B |
 	hub pull-request -F - \
 	-b "${DOWNSTREAM_BRANCH}" \
-	-h "projects/sync-with-upstream/${DOWNSTREAM_BRANCH}" || true
+	-h "actions/merge-upstream/${DOWNSTREAM_BRANCH}" || true
+
+gh pr create \
+   --body "" \
+   --title "$(git log -1 --format=%B)" \
+   --base "${DOWNSTREAM_BRANCH}" \
+   --head "actions/merge-upstream/${DOWNSTREAM_BRANCH}" || true
+
+gh pr merge --auto --merge \
+   "actions/merge-upstream/${DOWNSTREAM_BRANCH}"
