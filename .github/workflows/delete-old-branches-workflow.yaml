@@ -1,0 +1,40 @@
+name: Cleanup old branches
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "A git-log compatible date format"
+        default: '3 months ago'
+      dry_run:
+        description: "Run in dry-run mode so no branches are deleted"
+        default: true
+      branch_regex:
+        description: "A regex for branches to include."
+        default: '.*'
+      excluded_branches:
+        description: "A comma seperated list of branch(es) to exclude"
+        default: main,master,develop
+      excluded_branch_regex:
+        description: "A regex for branches to exclude."
+        default: ''
+      exclude_open_pr_branches:
+        description: "Exclude branches that have an open pull request"
+        default: true
+
+jobs:
+  housekeeping:
+    name: Cleanup old branches
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Run delete-old-branches-action
+        uses: ./delete-old-branches
+        with:
+          repo_token: ${{ github.token }}
+          date: ${{ inputs.date }}
+          dry_run: ${{ inputs.dry_run }}
+          branch_regex: ${{ inputs.branch_regex }}
+          excluded_branches: ${{ inputs.excluded_branches }}
+          excluded_branch_regex: ${{ inputs.excluded_branch_regex }}
+          exclude_open_pr_branches: ${{ inputs.exclude_open_pr_branches }}

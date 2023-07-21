@@ -1,0 +1,9 @@
+name: Cleanup old branches
+on:
+  push:
+    branches:
+      - master
+jobs:
+  delete-old-branches:
+    uses: ./.github/workflows/delete-old-branches-workflow.yml
+    dry_run: false
