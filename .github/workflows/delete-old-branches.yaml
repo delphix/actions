@@ -6,5 +6,8 @@ on:
 jobs:
   delete-old-branches:
     uses: ./.github/workflows/delete-old-branches-workflow.yaml
+    permissions:
+      contents: write
+      pull-requests: read
     with:
       dry_run: false
