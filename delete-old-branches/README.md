@@ -96,11 +96,11 @@ It is possible to test this action using [act](https://github.com/nektos/act).
 
 To test it as part of the workflow  you can run:
 ```console
-$ act -W .github/workflows/delete-old-branches-workflow.yml -s GITHUB_TOKEN="$GITHUB_TOKEN"
+$ act -W .github/workflows/delete-old-branches-workflow.yaml -s GITHUB_TOKEN="$GITHUB_TOKEN"
 ```
 You can also use `--input` to change some values like:
 ```console
-$ act -W .github/workflows/delete-old-branches-workflow.yml -s GITHUB_TOKEN="$GITHUB_TOKEN" --input branch_regex='dlpx/.*|projects/.*|dependabot/.*|gh-readonly-queue/.*'
+$ act -W .github/workflows/delete-old-branches-workflow.yaml -s GITHUB_TOKEN="$GITHUB_TOKEN" --input branch_regex='dlpx/.*|projects/.*|dependabot/.*|gh-readonly-queue/.*'
 ```
 
 ## Testing by running the post push action that consumes the workflow

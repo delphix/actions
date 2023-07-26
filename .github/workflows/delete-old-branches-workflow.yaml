@@ -1,6 +1,6 @@
 name: Cleanup old branches
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       date:
         description: "A git-log compatible date format"
@@ -29,7 +29,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run delete-old-branches-action
-        uses: ./delete-old-branches
+        #
+        # Instead of specifying the local path like
+        # `./delete-old-branches` here we must specify the full
+        # path. This is because if we use reuse this workflow in
+        # another repository the relative path is assumed to be
+        # relative to that repository instead of relative to this
+        # repository that actually contains the workflow and the
+        # action.
+        #
+        # Eventually it should be possible to determine the repository
+        # from which the workflow came and then use that to set the
+        # path (`github.workflow_ref` as described in
+        # https://docs.github.com/en/actions/learn-github-actions/contexts)
+        # but that doesn't seem possible yet.
+        #
+        uses: delphix/actions/delete-old-branches@master
         with:
           repo_token: ${{ github.token }}
           date: ${{ inputs.date }}
