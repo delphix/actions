@@ -166,7 +166,10 @@ def main():
     print(f"::set-output name=was_dry_run::{SETTINGS.dry_run}")
 
     #
-    # Set some git properties
+    # Set some git properties. First mark the repository as safe so we
+    # can interact with it. Secondly automatically convert SSH URLs to
+    # to https so that git-fetch will work from inside the `act`
+    # docker container when testing locally.
     #
     subprocess.check_call(["git", "config", "--global", "--add", "safe.directory", SETTINGS.workspace])
     subprocess.check_call(["git", "config", "url.https://github.com/.insteadOf", "git@github.com:"])

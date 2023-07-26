@@ -5,5 +5,5 @@ on:
       - master
 jobs:
   delete-old-branches:
-    uses: ./.github/workflows/delete-old-branches-workflow.yml
+    uses: ./.github/workflows/delete-old-branches-workflow.yaml
     dry_run: false

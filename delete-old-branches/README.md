@@ -108,5 +108,5 @@ $ act -W .github/workflows/delete-old-branches-workflow.yml -s GITHUB_TOKEN="$GI
 N.B. When testing the post-push action you cannot specify any inputs.
 
 ```console
-$ act -j housekeeping -s GITHUB_TOKEN="$GITHUB_TOKEN"
+$ act -j delete-old-branches -s GITHUB_TOKEN="$GITHUB_TOKEN"
 ```
