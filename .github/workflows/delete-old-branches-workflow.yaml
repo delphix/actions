@@ -5,21 +5,27 @@ on:
       date:
         description: "A git-log compatible date format"
         default: '3 months ago'
+        type: string
       dry_run:
         description: "Run in dry-run mode so no branches are deleted"
         default: true
+        type: boolean
       branch_regex:
         description: "A regex for branches to include."
         default: '.*'
+        type: string
       excluded_branches:
         description: "A comma seperated list of branch(es) to exclude"
-        default: main,master,develop
+        default: "main,master,develop"
+        type: string
       excluded_branch_regex:
         description: "A regex for branches to exclude."
         default: ''
+        type: string
       exclude_open_pr_branches:
         description: "Exclude branches that have an open pull request"
         default: true
+        type: boolean
 
 jobs:
   housekeeping:
