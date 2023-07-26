@@ -43,7 +43,10 @@ class Response(typing.NamedTuple):
     status: int
 
     def json(self) -> typing.Any:
-        return json.loads(self.body)
+        try:
+            return json.loads(self.body)
+        except Exception as e:
+            raise Exception({"body": self.body, "headers": self.headers, "status": self.status}) from e
 
 def request(
     url: str,
