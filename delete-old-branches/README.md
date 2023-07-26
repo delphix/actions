@@ -38,6 +38,9 @@ this repository.
      housekeeping:
        name: Cleanup old branches
        runs-on: ubuntu-latest
+       permissions:
+         contents: write
+         pull-requests: read
        steps:
          - name: Checkout repository
            uses: actions/checkout@v2
@@ -55,6 +58,9 @@ this repository.
      housekeeping:
        name: Cleanup old branches
        runs-on: ubuntu-latest
+       permissions:
+         contents: write
+         pull-requests: read
        steps:
          - name: Checkout repository
            uses: actions/checkout@v2
@@ -77,15 +83,23 @@ this repository.
    jobs:
      delete-old-branches:
        uses: ./.github/workflows/delete-old-branches-workflow.yml
-       branch_regex: 'dlpx/.*|projects/.*|dependabot/.*|gh-readonly-queue/.*'
+       permissions:
+         contents: write
+         pull-requests: read
+       with:
+         branch_regex: 'dlpx/.*|projects/.*|dependabot/.*|gh-readonly-queue/.*'
    ```
 3. Only run against certain branches via exclude:
    ```yaml
    jobs:
      delete-old-branches:
        uses: ./.github/workflows/delete-old-branches-workflow.yml
-       excluded_branches: 'develop,patch,release,main'
-       excluded_branch_regex: 'projects/.*'
+       permissions:
+         contents: write
+         pull-requests: read
+       with:
+         excluded_branches: 'develop,patch,release,main'
+         excluded_branch_regex: 'projects/.*'
    ```
 
 ## Testing
