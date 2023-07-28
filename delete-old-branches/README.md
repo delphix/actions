@@ -12,15 +12,15 @@ branches are used at Delphix.
 
 ## Inputs
 
-| Input                    | Description                                                  |
-|--------------------------|--------------------------------------------------------------|
-| repo_token               | *Required*: The GITHUB_TOKEN secret                          |
-| date                     | *Required*: A git-log compatible date format. (3 months ago) |
-| dry_run                  | *Required*: Run in dry-run mode so no branches are deleted   |
-| branch_regex             | A regex for branches to include                              |
-| excluded_branches        | A comma seperated list of branch(es) to exclude              |
-| excluded_branch_regex    | A regex for branches to exclude.                             |
-| exclude_open_pr_branches | Exclude branches that have an open pull request              |
+| Input                    | Description                                      | Default             |
+|--------------------------|--------------------------------------------------|---------------------|
+| repo_token               | *Required*: The GITHUB_TOKEN secret              | -------             |
+| date                     | A git-log compatible date format. (3 months ago) | 3 months ago        |
+| dry_run                  | Run in dry-run mode so no branches are deleted   | true                |
+| branch_regex             | A regex for branches to include                  | .*                  |
+| excluded_branches        | A comma seperated list of branch(es) to exclude  | main,master,develop |
+| excluded_branch_regex    | A regex for branches to exclude.                 | ''                  |
+| exclude_open_pr_branches | Exclude branches that have an open pull request  | true                |
 
 ## Examples
 

@@ -8,12 +8,18 @@ inputs:
   repo_token:
     description: "The GITHUB_TOKEN secret"
     required: true
+
+  #
+  # Important miscellaneous settings
+  #
   date:
     description: "A git-log compatible date format"
-    required: true
+    required: false
+    default: "3 months ago"
   dry_run:
     description: "Run in dry-run mode so no branches are deleted"
-    required: true
+    required: false
+    default: true
 
   #
   # Control the branches to run against
