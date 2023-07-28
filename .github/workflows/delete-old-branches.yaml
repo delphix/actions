@@ -1,8 +1,8 @@
 name: Cleanup old branches
-on:
-  push:
-    branches:
-      - master
+"on":
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"  # Weekly
 jobs:
   delete-old-branches:
     uses: ./.github/workflows/delete-old-branches-workflow.yaml
