@@ -51,14 +51,19 @@ class Response(typing.NamedTuple):
 def request(
     url: str,
     method: str = "GET",
+    data: dict | None = None,
 ) -> Response:
     """
     A simple function to make calls to GitHub
     """
     headers = {
-        "Accept": "application/json",
+        "Accept": "application/vnd.github+json",
         "Authorization": f"Bearer {SETTINGS.repo_token}"
     }
+
+    if data:
+        url += "?" + urllib.parse.urlencode(data, doseq=True, safe="/")
+
 
     httprequest = urllib.request.Request(
         url, headers=headers, method=method
@@ -116,10 +121,42 @@ def _open_pull_request_branches() -> list[str]:
     Return a cached list of all branches associated with open pull
     requests.
     """
-    return [
-        pull["head"]["ref"] for pull in
-        request(f"{SETTINGS.base_uri}/repos/{SETTINGS.repository}/pulls").json()
-    ]
+    def _helper(page: int) -> typing.Iterable[str]:
+        """
+        yield the pull request branches from the given page number until the last page
+        """
+        #
+        # Make the request
+        #
+        response = request(
+            f"{SETTINGS.base_uri}/repos/{SETTINGS.repository}/pulls",
+            data={
+                "page": page,
+            },
+        )
+
+        #
+        # Parse the request
+        #
+        # Get all branches
+        for pull in response.json():
+            yield pull["head"]["ref"]
+
+        # Determine if there are more results
+        next_page = None
+        if link_header := response.headers['Link']:
+            for link in link_header.split(","):
+                if 'rel="next"' in link:
+                    if match := re.search(r"[?&]page=(\d+)", link):
+                        next_page = int(match.group(1))
+
+        #
+        # Recurse
+        #
+        if next_page:
+            yield from _helper(page=next_page)
+
+    return list(_helper(page=1))
 
 
 def _open_pr_branch(branch: str) -> bool:
