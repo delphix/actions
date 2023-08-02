@@ -16,7 +16,6 @@ import functools
 #
 class Settings:
     def __init__(self):
-        print(os.environ)
         self.base_uri=os.environ["GITHUB_API_URL"]
         self.workspace=os.environ["GITHUB_WORKSPACE"]
         self.repository=os.environ["GITHUB_REPOSITORY"]
